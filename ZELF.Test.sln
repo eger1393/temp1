@@ -1,0 +1,16 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZELF.Test", "ZELF.Test\ZELF.Test.csproj", "{F8421D0D-39DF-4D9C-95A9-2B465322CFDF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F8421D0D-39DF-4D9C-95A9-2B465322CFDF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F8421D0D-39DF-4D9C-95A9-2B465322CFDF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F8421D0D-39DF-4D9C-95A9-2B465322CFDF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F8421D0D-39DF-4D9C-95A9-2B465322CFDF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
