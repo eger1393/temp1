@@ -85,9 +85,17 @@ namespace ZELF.Test.Data.Repositories
 
         public User Subscribe(Guid userId, Guid toUserId)
         {
+            
             var user = GetUser(toUserId);
-            if (user.Subscribers.Any(x => x.UserId == userId)) return user;
-            user.Subscribers.Add(new SubscribedUser {UserId = userId});
+            if(!IsExist(userId))
+                throw new ArgumentException($"User with id: {userId} not found");
+            if (user.Subscribers.Any(x => x.SubscribedUserId == userId)) 
+                throw new InvalidOperationException($"User with id: {userId} already subscribed to {toUserId}");
+            user.Subscribers.Add(new SubscribedUser
+            {
+                SubscribedUserId = userId,
+                FromUserId = user.Id
+            });
             user.SubscribersCount++;
             _context.SaveChanges();
             return user;
@@ -96,7 +104,7 @@ namespace ZELF.Test.Data.Repositories
         public User UnSubscribe(Guid userId, Guid toUserId)
         {
             var user = GetUser(toUserId);
-            if (!user.Subscribers.Remove(user.Subscribers.FirstOrDefault(x => x.UserId == userId)))
+            if (!user.Subscribers.Remove(user.Subscribers.FirstOrDefault(x => x.SubscribedUserId == userId)))
                 throw new InvalidOperationException($"User with id: {userId} not found with {toUserId} subscribers");
             user.SubscribersCount--;
             _context.SaveChanges();
@@ -109,5 +117,7 @@ namespace ZELF.Test.Data.Repositories
                 throw new ArgumentException($"count must be greater than 0");
             return _context.Users.OrderBy(x => x.SubscribersCount).Take(count).Include(x => x.Subscribers);
         }
+
+        private bool IsExist(Guid userId) => _context.Users.Any(x => x.Id == userId);
     }
 }

@@ -21,7 +21,6 @@ namespace ZELF.Test.Data.Models
         /// <summary>
         /// Подписчики
         /// </summary>
-        // [ManyToMany(typeof(User), CascadeOperations = CascadeOperation.All)]
         public List<SubscribedUser> Subscribers { get; set; }
         
         // TODO Подумать как сделать поле вычисляемым на уровне БД
