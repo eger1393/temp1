@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 using ApiGateway.Models;
 using Data.Repositories;
 using Microsoft.AspNetCore.Mvc;
@@ -38,7 +39,7 @@ namespace ApiGateway.Controllers
         }
 
         [HttpGet("top/{count:int}")]
-        public IActionResult GetTop(int count)
+        public IActionResult GetTop(int count = 10)
         {
             var users = _userRepository.GetTop(count);
             return Ok(users);
