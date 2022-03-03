@@ -6,11 +6,14 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using ZELF.Test.Data;
+using ZELF.Test.Data.Repositories;
 
 namespace ZELF.Test
 {
@@ -28,6 +31,10 @@ namespace ZELF.Test
         {
             services.AddControllers();
             services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new OpenApiInfo {Title = "ZELF.Test", Version = "v1"}); });
+            var connectionString = Configuration.GetConnectionString("default");
+            services.AddDbContext<DataContext>(x => 
+                    x.UseSqlite(connectionString));
+            services.AddScoped<IUserRepository, UserRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -47,6 +54,11 @@ namespace ZELF.Test
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+
+            using var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>()?.CreateScope();
+            if (serviceScope == null) return;
+            var context = serviceScope.ServiceProvider.GetRequiredService<DataContext>();
+            context.Database.EnsureCreated();
         }
     }
 }

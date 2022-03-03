@@ -8,7 +8,12 @@
     <ItemGroup>
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.14" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.14" />
+        <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.2" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\ZELF.Test.Data\ZELF.Test.Data.csproj" />
     </ItemGroup>
 
 </Project>
