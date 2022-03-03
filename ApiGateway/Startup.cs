@@ -12,10 +12,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using ZELF.Test.Data;
-using ZELF.Test.Data.Repositories;
+using Data;
+using Data.Repositories;
 
-namespace ZELF.Test
+namespace ApiGateway
 {
     public class Startup
     {
@@ -30,7 +30,7 @@ namespace ZELF.Test
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new OpenApiInfo {Title = "ZELF.Test", Version = "v1"}); });
+            services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new OpenApiInfo {Title = "ApiGateway", Version = "v1"}); });
             var connectionString = Configuration.GetConnectionString("default");
             services.AddDbContext<DataContext>(x => 
                     x.UseSqlite(connectionString));
@@ -44,7 +44,7 @@ namespace ZELF.Test
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ZELF.Test v1"));
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ApiGateway v1"));
             }
 
             app.UseHttpsRedirection();

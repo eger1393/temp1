@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using SQLite;
 using SQLiteNetExtensions.Attributes;
 
-namespace ZELF.Test.Data.Models
+namespace Data.Models
 {
     public class User
     {
@@ -14,7 +14,7 @@ namespace ZELF.Test.Data.Models
         /// <summary>
         /// Имя, состоит из пробелов и букв, содержит макс 64 символа
         /// </summary>
-        [System.ComponentModel.DataAnnotations.MaxLength(64)]
+        [SQLite.MaxLength(64)]
         [Required]
         public string Name { get; set; }
         

@@ -1,4 +1,4 @@
-﻿namespace ZELF.Test.Models
+﻿namespace ApiGateway.Models
 {
     public class CreateUser
     {

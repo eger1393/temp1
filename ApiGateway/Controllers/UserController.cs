@@ -1,9 +1,9 @@
 ﻿using System;
+using ApiGateway.Models;
+using Data.Repositories;
 using Microsoft.AspNetCore.Mvc;
-using ZELF.Test.Data.Repositories;
-using ZELF.Test.Models;
 
-namespace ZELF.Test.Controllers
+namespace ApiGateway.Controllers
 {
     [Route("api/User")]
     [ApiController]

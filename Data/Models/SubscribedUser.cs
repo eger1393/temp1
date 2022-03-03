@@ -2,7 +2,7 @@
 using SQLite;
 using SQLiteNetExtensions.Attributes;
 
-namespace ZELF.Test.Data.Models
+namespace Data.Models
 {
     public class SubscribedUser
     {

@@ -2,10 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Data.Models;
 using Microsoft.EntityFrameworkCore;
-using ZELF.Test.Data.Models;
 
-namespace ZELF.Test.Data.Repositories
+namespace Data.Repositories
 {
     public interface IUserRepository
     {
@@ -85,7 +85,6 @@ namespace ZELF.Test.Data.Repositories
 
         public User Subscribe(Guid userId, Guid toUserId)
         {
-            
             var user = GetUser(toUserId);
             if(!IsExist(userId))
                 throw new ArgumentException($"User with id: {userId} not found");
@@ -115,7 +114,7 @@ namespace ZELF.Test.Data.Repositories
         {
             if (count <= 0)
                 throw new ArgumentException($"count must be greater than 0");
-            return _context.Users.OrderBy(x => x.SubscribersCount).Take(count).Include(x => x.Subscribers);
+            return _context.Users.OrderByDescending(x => x.SubscribersCount).Take(count).Include(x => x.Subscribers);
         }
 
         private bool IsExist(Guid userId) => _context.Users.Any(x => x.Id == userId);

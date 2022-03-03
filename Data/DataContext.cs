@@ -1,7 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
-using ZELF.Test.Data.Models;
+﻿using Data.Models;
+using Microsoft.EntityFrameworkCore;
 
-namespace ZELF.Test.Data
+namespace Data
 {
     
     public class DataContext : DbContext
@@ -17,6 +17,7 @@ namespace ZELF.Test.Data
         {
             modelBuilder.Entity<User>()
                 .HasIndex(x => x.SubscribersCount);
+            modelBuilder.Entity<User>().Property(x => x.Name).HasMaxLength(64);
         }
     }
 }
