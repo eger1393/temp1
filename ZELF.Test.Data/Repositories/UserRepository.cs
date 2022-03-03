@@ -35,7 +35,7 @@ namespace ZELF.Test.Data.Repositories
             var newUser = new User()
             {
                 Name = name,
-                Subscribers = new List<User>(),
+                Subscribers = new List<SubscribedUser>(),
                 SubscribersCount = 0
             };
             _context.Users.Add(newUser);
@@ -66,10 +66,9 @@ namespace ZELF.Test.Data.Repositories
         /// <exception cref="ArgumentException">Если пользователь с переданным Ид не найден</exception>
         public User Subscribe(Guid userId, Guid toUserId)
         {
-            var subscribingUser = GetUserWithOutSubscribers(userId);
             var user = GetUser(toUserId);
-            if (user.Subscribers.Any(x => x.Id == userId)) return user;
-            user.Subscribers.Add(subscribingUser);
+            if (user.Subscribers.Any(x => x.UserId == userId)) return user;
+            user.Subscribers.Add(new SubscribedUser {UserId = userId});
             user.SubscribersCount++;
             _context.SaveChanges();
             return user;
@@ -86,7 +85,7 @@ namespace ZELF.Test.Data.Repositories
         public User UnSubscribe(Guid userId, Guid toUserId)
         {
             var user = GetUser(toUserId);
-            if (!user.Subscribers.Remove(user.Subscribers.FirstOrDefault(x => x.Id == userId)))
+            if (!user.Subscribers.Remove(user.Subscribers.FirstOrDefault(x => x.UserId == userId)))
                 throw new InvalidOperationException($"User with id: {userId} not found with {toUserId} subscribers");
             user.SubscribersCount--;
             _context.SaveChanges();
@@ -103,21 +102,7 @@ namespace ZELF.Test.Data.Repositories
         {
             if (count <= 0)
                 throw new ArgumentException($"count must be greater than 0");
-            return _context.Users.OrderBy(x => x.SubscribersCount).Take(count);
-        }
-
-        /// <summary>
-        /// Возвращает данные о пользователе, не вытягиваяя инфу о подписках
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        /// <exception cref="ArgumentException"></exception>
-        private User GetUserWithOutSubscribers(Guid id)
-        {
-            var user = _context.Users.FirstOrDefault(x => x.Id == id);
-            if (user is null)
-                throw new ArgumentException($"User with id: {id} not found");
-            return user;
+            return _context.Users.OrderBy(x => x.SubscribersCount).Take(count).Include(x => x.Subscribers);
         }
     }
 }
