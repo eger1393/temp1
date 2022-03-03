@@ -3,16 +3,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Data
 {
-    
     public class DataContext : DbContext
     {
-        public DbSet<User> Users { get; set; }
-
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
-            
         }
-        
+
+        public DbSet<User> Users { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<User>()

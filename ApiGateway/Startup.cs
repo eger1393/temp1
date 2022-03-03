@@ -1,19 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Data;
+using Data.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using Data;
-using Data.Repositories;
 
 namespace ApiGateway
 {
@@ -30,10 +23,13 @@ namespace ApiGateway
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new OpenApiInfo {Title = "ApiGateway", Version = "v1"}); });
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo {Title = "ApiGateway", Version = "v1"});
+            });
             var connectionString = Configuration.GetConnectionString("default");
-            services.AddDbContext<DataContext>(x => 
-                    x.UseSqlite(connectionString));
+            services.AddDbContext<DataContext>(x =>
+                x.UseSqlite(connectionString));
             services.AddScoped<IUserRepository, UserRepository>();
         }
 

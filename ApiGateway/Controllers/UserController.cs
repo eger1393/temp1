@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Text.RegularExpressions;
 using ApiGateway.Models;
 using Data.Repositories;
 using Microsoft.AspNetCore.Mvc;
@@ -30,7 +29,7 @@ namespace ApiGateway.Controllers
             var user = _userRepository.Subscribe(userId, toUserId);
             return Ok(user);
         }
-        
+
         [HttpPatch("{userId:guid}/unsubscribe/{toUserId:guid}")]
         public IActionResult UnSubscribe(Guid userId, Guid toUserId)
         {

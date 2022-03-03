@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Data.Models;
@@ -9,33 +8,32 @@ namespace Data.Repositories
 {
     public interface IUserRepository
     {
-        
         /// <summary>
-        /// Добавляет нового пользователя
+        ///     Добавляет нового пользователя
         /// </summary>
         /// <param name="name">Имя пользователя</param>
         /// <returns>Пользователь</returns>
         public User AddUser(string name);
-        
+
         /// <summary>
-        /// Возвращает данные о пользователе, включая его подписчиков
+        ///     Возвращает данные о пользователе, включая его подписчиков
         /// </summary>
         /// <param name="id">Ид пользователя</param>
         /// <returns></returns>
         /// <exception cref="ArgumentException">Когда пользователь с переданным Ид не найден</exception>
         public User GetUser(Guid id);
-        
+
         /// <summary>
-        /// Подписывает на пользователя
+        ///     Подписывает на пользователя
         /// </summary>
         /// <param name="userId">Пользователь которого подписываем</param>
         /// <param name="toUserId">На кого подписываем</param>
         /// <returns>Обновленные данные о пользхователе</returns>
         /// <exception cref="ArgumentException">Если пользователь с переданным Ид не найден</exception>
         public User Subscribe(Guid userId, Guid toUserId);
-        
+
         /// <summary>
-        /// Одписать пользователя
+        ///     Одписать пользователя
         /// </summary>
         /// <param name="userId">Пользователь которого отписываем</param>
         /// <param name="toUserId">От кого отписываем</param>
@@ -43,16 +41,16 @@ namespace Data.Repositories
         /// <exception cref="ArgumentException">Если пользователь с переданным Ид не найден</exception>
         /// <exception cref="InvalidOperationException">Если пытаемся отписать не подписанного пользователя</exception>
         public User UnSubscribe(Guid userId, Guid toUserId);
-        
+
         /// <summary>
-        /// Возвращает пользователей с наибольшим чисслом подписок
+        ///     Возвращает пользователей с наибольшим чисслом подписок
         /// </summary>
         /// <param name="count">кол-во пользователей которое надо вернуть</param>
         /// <returns></returns>
         /// <exception cref="ArgumentException">Если переданно не положительное кол-во</exception>
         public IEnumerable<User> GetTop(int count);
     }
-    
+
     public class UserRepository : IUserRepository
     {
         private readonly DataContext _context;
@@ -64,7 +62,7 @@ namespace Data.Repositories
 
         public User AddUser(string name)
         {
-            var newUser = new User()
+            var newUser = new User
             {
                 Name = name,
                 Subscribers = new List<SubscribedUser>(),
@@ -86,9 +84,9 @@ namespace Data.Repositories
         public User Subscribe(Guid userId, Guid toUserId)
         {
             var user = GetUser(toUserId);
-            if(!IsExist(userId))
+            if (!IsExist(userId))
                 throw new ArgumentException($"User with id: {userId} not found");
-            if (user.Subscribers.Any(x => x.SubscribedUserId == userId)) 
+            if (user.Subscribers.Any(x => x.SubscribedUserId == userId))
                 throw new InvalidOperationException($"User with id: {userId} already subscribed to {toUserId}");
             user.Subscribers.Add(new SubscribedUser
             {
@@ -109,14 +107,17 @@ namespace Data.Repositories
             _context.SaveChanges();
             return user;
         }
-        
+
         public IEnumerable<User> GetTop(int count)
         {
             if (count <= 0)
-                throw new ArgumentException($"count must be greater than 0");
+                throw new ArgumentException("count must be greater than 0");
             return _context.Users.OrderByDescending(x => x.SubscribersCount).Take(count).Include(x => x.Subscribers);
         }
 
-        private bool IsExist(Guid userId) => _context.Users.Any(x => x.Id == userId);
+        private bool IsExist(Guid userId)
+        {
+            return _context.Users.Any(x => x.Id == userId);
+        }
     }
 }

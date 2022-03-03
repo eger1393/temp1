@@ -13,7 +13,7 @@ namespace Tests
     {
         private DataContext _context;
         private IUserRepository _userRepository;
-        
+
         [SetUp]
         public void Setup()
         {
@@ -27,6 +27,7 @@ namespace Tests
                 _context.Database.EnsureDeleted();
                 _context.Database.EnsureCreated();
             }
+
             _userRepository = new UserRepository(_context);
         }
 
@@ -37,11 +38,13 @@ namespace Tests
             _userRepository.AddUser(userName);
             Assert.IsTrue(_context.Users.Any(x => x.Name == userName));
         }
-        
+
         [Test]
-        public void AddUser_NullNameError() =>
+        public void AddUser_NullNameError()
+        {
             Assert.Catch<DbUpdateException>(() => _userRepository.AddUser(null));
-        
+        }
+
         [Test]
         public void AddUser_LongNameError()
         {
@@ -70,9 +73,10 @@ namespace Tests
             var user1 = _userRepository.AddUser("test1");
             var user2 = _userRepository.AddUser("test2");
             _userRepository.Subscribe(user1.Id, user2.Id);
-            Assert.IsTrue(user2.SubscribersCount == 1 && user2.Subscribers.FirstOrDefault()?.SubscribedUserId == user1.Id);
+            Assert.IsTrue(user2.SubscribersCount == 1 &&
+                          user2.Subscribers.FirstOrDefault()?.SubscribedUserId == user1.Id);
         }
-        
+
         [Test]
         public void Subscribe_MutualSubscription()
         {
@@ -80,10 +84,12 @@ namespace Tests
             var user2 = _userRepository.AddUser("test2");
             _userRepository.Subscribe(user1.Id, user2.Id);
             _userRepository.Subscribe(user2.Id, user1.Id);
-            Assert.IsTrue(user2.SubscribersCount == 1 && user2.Subscribers.FirstOrDefault()?.SubscribedUserId == user1.Id);
-            Assert.IsTrue(user1.SubscribersCount == 1 && user1.Subscribers.FirstOrDefault()?.SubscribedUserId == user2.Id);
+            Assert.IsTrue(user2.SubscribersCount == 1 &&
+                          user2.Subscribers.FirstOrDefault()?.SubscribedUserId == user1.Id);
+            Assert.IsTrue(user1.SubscribersCount == 1 &&
+                          user1.Subscribers.FirstOrDefault()?.SubscribedUserId == user2.Id);
         }
-        
+
         [Test]
         public void Subscribe_ManyUsers()
         {
@@ -96,7 +102,7 @@ namespace Tests
             Assert.IsTrue(user1.SubscribersCount == 2);
             Assert.IsTrue(user2.SubscribersCount == 1);
         }
-        
+
         [Test]
         public void Subscribe_UserAlreadySubscribed()
         {
@@ -105,21 +111,21 @@ namespace Tests
             _userRepository.Subscribe(user1.Id, user2.Id);
             Assert.Catch<InvalidOperationException>(() => _userRepository.Subscribe(user1.Id, user2.Id));
         }
-        
+
         [Test]
         public void Subscribe_UserNotFound()
         {
             var user = _userRepository.AddUser("test2");
             Assert.Catch<ArgumentException>(() => _userRepository.Subscribe(Guid.NewGuid(), user.Id));
         }
-        
+
         [Test]
         public void Subscribe_ToUserNotFound()
         {
             var user = _userRepository.AddUser("test2");
             Assert.Catch<ArgumentException>(() => _userRepository.Subscribe(user.Id, Guid.NewGuid()));
         }
-        
+
         [Test]
         public void UnSubscribe_Success()
         {
@@ -143,28 +149,28 @@ namespace Tests
             _userRepository.UnSubscribe(user3.Id, user1.Id);
             Assert.IsTrue(user2.SubscribersCount == 0 && user1.Subscribers.Count == 0);
         }
-        
+
         [Test]
         public void UnSubscribe_UserWhichTheNotSubscribed()
         {
             var user = _userRepository.AddUser("test1");
             Assert.Catch<InvalidOperationException>(() => _userRepository.UnSubscribe(Guid.NewGuid(), user.Id));
         }
-        
+
         [Test]
         public void UnSubscribe_UserNotFound()
         {
             var user = _userRepository.AddUser("test2");
             Assert.Catch<InvalidOperationException>(() => _userRepository.UnSubscribe(Guid.NewGuid(), user.Id));
         }
-        
+
         [Test]
         public void UnSubscribe_ToUserNotFound()
         {
             var user = _userRepository.AddUser("test2");
             Assert.Catch<ArgumentException>(() => _userRepository.UnSubscribe(user.Id, Guid.NewGuid()));
         }
-        
+
         [Test]
         public void GetTop_Success()
         {
@@ -179,7 +185,7 @@ namespace Tests
             var topUsers = _userRepository.GetTop(3);
             Assert.IsTrue(topUsers.Count() <= 3 && topUsers.First().Id == newUser.Id);
         }
-        
+
         [Test]
         public void GetTop_CorruptedCount()
         {
